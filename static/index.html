@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<title>Remifentanil TCI · Grey-box PK (live demo)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0b1220; --panel:#111a2e; --panel-2:#16233d; --line:#1e2c47;
+  --ink:#e2e8f0; --muted:#94a3b8; --accent:#10b981; --minto:#a855f7;
+  --warn:#f59e0b; --danger:#ef4444; --radius:14px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+#app{max-width:1120px;margin:0 auto;padding:0 20px 48px}
+.hdr{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 0 12px;background:linear-gradient(180deg,var(--bg) 70%,rgba(11,18,32,0))}
+.brand{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.brand .sub{display:block;font-size:.72rem;font-weight:400;color:var(--muted);margin-top:2px}
+.brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(16,185,129,.18)}
+.tabs{display:flex;gap:6px}
+.tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:8px 14px;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.15s}
+.tab:hover{color:var(--ink);border-color:#2a3c5e}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#04231a}
+.banner{border:1px solid #3a2f12;background:rgba(245,158,11,.09);color:#fcd9a0;border-radius:12px;padding:10px 14px;font-size:.82rem;margin:4px 0 20px}
+.banner strong{color:#ffe4b0}
+.err{border:1px solid #4c1d1d;background:rgba(239,68,68,.1);color:#fecaca;border-radius:12px;padding:10px 14px;font-size:.85rem;margin-bottom:16px}
+section{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+h2{font-size:1.35rem;margin:6px 0 4px}
+.lead{color:var(--muted);font-size:.9rem;max-width:70ch;margin:0 0 18px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media (max-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+.fld{display:flex;flex-direction:column;gap:5px;font-size:.78rem;color:var(--muted)}
+.fld.inline{flex-direction:row;align-items:center;gap:10px;max-width:320px;margin-bottom:14px}
+.fld span{font-weight:600;letter-spacing:.01em}
+.fld input,.fld select{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 11px;font-size:.92rem;font-family:var(--font)}
+.fld input:focus,.fld select:focus,.tab:focus-visible,.chip:focus-visible,.run:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:6px 12px;border-radius:999px;font-size:.8rem;cursor:pointer;transition:.15s}
+.chip:hover{color:var(--ink)}
+.chip.on{background:rgba(16,185,129,.14);border-color:var(--accent);color:#6ee7b7}
+.run{border:none;background:var(--accent);color:#04231a;font-weight:700;padding:11px 20px;border-radius:11px;font-size:.92rem;cursor:pointer;transition:.15s}
+.run:hover{filter:brightness(1.06)}
+.run:disabled{opacity:.6;cursor:progress}
+.chartbox{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin:18px 0;height:460px}
+.chartbox.sm{height:320px}
+.chartbox canvas{width:100%!important;height:100%!important}
+.pills{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 4px}
+.pill{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-width:150px;font-size:.74rem;color:var(--muted)}
+.pill span{display:block;margin-bottom:3px}
+.pill strong{font-size:1.5rem;color:var(--ink);font-weight:700}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+thead th{text-align:right;padding:11px 12px;color:var(--muted);font-weight:600;background:var(--panel-2);border-bottom:1px solid var(--line);white-space:nowrap}
+thead th:first-child{text-align:left}
+tbody td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line)}
+tbody td:first-child{text-align:left;font-weight:600}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody tr.ref td{color:#d8b4fe}
+tbody tr:last-child td{border-bottom:none}
+.ftr{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.74rem;text-align:center}
+
+/* ---- diagnostics tab -----------------------------------------------------
+   Persistent, inspectable. Everything here is precomputed server-side; mode
+   switches are pure re-render so they feel instant and can be interrupted
+   mid-transition rather than locking for a fixed duration. ---------------- */
+.dgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+@media (max-width:940px){.dgrid{grid-template-columns:1fr}}
+.dcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.dcard h3{margin:0 0 4px;font-size:.92rem}
+.dcard .hint{color:var(--muted);font-size:.74rem;line-height:1.45;margin:0 0 10px}
+/* Footnote, not a warning banner — the chart should lead, not the disclaimer. */
+.foot{margin-top:9px;font-size:.7rem;color:#64748b;line-height:1.45;
+  display:flex;align-items:flex-start;gap:6px}
+.foot .qm{flex:none;width:14px;height:14px;border-radius:50%;border:1px solid #475569;
+  color:#94a3b8;font-size:.6rem;line-height:12px;text-align:center;cursor:help;
+  font-weight:700;transition:.14s}
+.foot .qm:hover{border-color:var(--accent);color:var(--accent)}
+.foot .more{color:#94a3b8;cursor:pointer;text-decoration:underline dotted;text-underline-offset:2px}
+.foot .more:hover{color:var(--ink)}
+.footx{margin-top:7px;font-size:.71rem;color:var(--muted);line-height:1.6;
+  border-left:2px solid var(--line);padding-left:10px;animation:fadein .18s ease}
+table.dt{width:100%;border-collapse:collapse;font-size:.78rem}
+table.dt thead th{position:sticky;top:0;background:var(--panel-2);cursor:pointer;user-select:none;
+  padding:8px 7px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line);color:var(--muted)}
+table.dt thead th:first-child{text-align:left}
+table.dt thead th:hover{color:var(--ink)}
+table.dt thead th .ar{opacity:.5;font-size:.66rem;margin-left:3px}
+table.dt td{padding:7px;text-align:right;border-bottom:1px solid var(--line)}
+table.dt td:first-child{text-align:left;font-weight:600}
+table.dt tbody tr{cursor:pointer;transition:background .12s}
+table.dt tbody tr:hover{background:rgba(255,255,255,.035)}
+table.dt tbody tr.sel{background:rgba(16,185,129,.13);box-shadow:inset 3px 0 0 var(--accent)}
+table.dt tbody tr.abl td{color:#fca5a5;font-style:italic}
+.ok{color:#6ee7b7}.bad{color:#fca5a5}
+.modes{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}
+.mode{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:9px;
+  padding:7px 13px;font-size:.79rem;font-weight:600;cursor:pointer;transition:.14s}
+.mode:hover{color:var(--ink);border-color:#2a3c5e}
+.mode.on{background:var(--accent);border-color:var(--accent);color:#04231a}
+.figwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-top:14px}
+.figwrap h4{margin:0 0 8px;font-size:.82rem;color:var(--muted);font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;gap:10px}
+.figwrap img{width:100%;height:auto;border-radius:8px;background:#fff;cursor:zoom-in;
+  animation:fadein .2s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.dl{background:rgba(16,185,129,.12);border:1px solid var(--accent);color:#6ee7b7;border-radius:7px;
+  padding:4px 10px;font-size:.7rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.dl:hover{background:rgba(16,185,129,.22)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:940px){.cmp{grid-template-columns:1fr}}
+/* Tiles sized for the figures' true 2.7:1 aspect — at 300px these rendered
+   ~112px tall and were unreadable. One column below 1100px. */
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(560px,1fr));gap:14px}
+@media (max-width:1180px){.gal{grid-template-columns:1fr}}
+.gal figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px;
+  transition:border-color .14s}
+.gal figure:hover{border-color:#2a3c5e}
+.gal figcaption{font-size:.78rem;color:var(--ink);margin-bottom:7px;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gal figure.abl{border-color:#4c1d1d}
+.gal figure.abl figcaption{color:#fca5a5}
+.gal img{width:100%;height:auto;border-radius:7px;background:#fff;cursor:zoom-in}
+.hero{background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:13px;margin-bottom:16px}
+.hero h4{margin:0 0 9px;font-size:.86rem;display:flex;justify-content:space-between;align-items:center;gap:10px}
+/* live diagnostic panel grid — real charts, not images */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px;margin-top:12px}
+.panel-c{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px;
+  transition:border-color .14s}
+.panel-c:hover{border-color:#2a3c5e}
+.panel-t{font-size:.76rem;color:var(--muted);font-weight:600;margin-bottom:8px}
+.exp{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:12px;
+  font-size:.71rem;color:#64748b}
+.interp{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;
+  font-size:.8rem;line-height:1.62;color:var(--muted);margin-top:14px}
+.interp b{color:var(--ink)}
+.picker{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:.76rem;color:var(--muted)}
+.picker select{background:var(--panel);border:1px solid var(--line);color:var(--ink);
+  border-radius:9px;padding:7px 10px;font-size:.82rem;font-family:var(--font)}
+
+/* ---- figure modal ---- */
+#modal{position:fixed;inset:0;z-index:300;background:rgba(5,9,18,.86);display:none;
+  align-items:center;justify-content:center;padding:24px}
+#modal.on{display:flex}
+#modal .mbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:14px;max-width:96vw;max-height:94vh;overflow:auto}
+#modal .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#modal .mtitle{font-weight:700;font-size:.95rem}
+#modal img{max-width:100%;height:auto;border-radius:8px;background:#fff}
+#modal .mx{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;
+  padding:4px 10px;cursor:pointer;font-size:.8rem}
+#modal .mx:hover{color:var(--ink)}
+#modal .mspin{color:var(--muted);font-size:.8rem;padding:40px 80px;text-align:center}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" role="dialog" aria-modal="true" aria-label="Diagnostic figure"></div>
+<script>
+"use strict";
+const COLORS = ['#10B981','#F59E0B','#EF4444','#3B82F6','#EC4899','#14B8A6','#F97316','#84CC16'];
+const $ = (tag, attrs, kids) => {
+  const el = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    if (k === 'class') el.className = attrs[k];
+    else if (k === 'html') el.innerHTML = attrs[k];
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), attrs[k]);
+    else if (k === 'text') el.textContent = attrs[k];
+    else el.setAttribute(k, attrs[k]);
+  }
+  (kids || []).forEach(c => el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+  return el;
+};
+async function getJSON(u){ const r = await fetch(u); if(!r.ok) throw new Error(u+' → '+r.status); return r.json(); }
+async function postJSON(u,b){ const r = await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}); if(!r.ok) throw new Error(u+' → '+r.status); return r.json(); }
+
+const state = { tab:'trajectory', models:[], def:'XGBoost', disc:null,
+  sel:[], lastTraj:null, charts:{} };
+
+function killChart(key){ if(state.charts[key]){ state.charts[key].destroy(); state.charts[key]=null; } }
+
+/* ===================== live diagnostic charts =====================
+   The Diagnostics tab renders real Chart.js plots from served geometry, in
+   keeping with every other view. Static PNGs are export-only. Series are
+   fetched per arm on demand and cached for the session. */
+const _series = {};
+async function getSeries(model){
+  if(_series[model]) return _series[model];
+  const s = await getJSON('/api/diagnostics/series?model='+encodeURIComponent(model));
+  if(s.error) throw new Error(s.error);
+  _series[model] = s; return s;
+}
+const AX = {grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#94a3b8',font:{size:9}}};
+const baseOpts = (xt,yt)=>({responsive:true,maintainAspectRatio:false,
+  animation:{duration:200},
+  plugins:{legend:{display:false},tooltip:{intersect:false,mode:'nearest'}},
+  scales:{x:{...AX,title:{display:true,text:xt,color:'#64748b',font:{size:10}}},
+          y:{...AX,title:{display:true,text:yt,color:'#64748b',font:{size:10}}}}});
+const pts=(x,y)=>x.map((v,i)=>({x:v,y:y[i]}));
+
+/** Build one live diagnostic panel; returns the wrapper element. */
+function panel(id,title,h){
+  const w=$('div',{class:'panel-c'});
+  w.appendChild($('div',{class:'panel-t'},[title]));
+  w.appendChild($('div',{style:'height:'+(h||210)+'px'},[$('canvas',{id:id})]));
+  return w;
+}
+function mkChart(id,cfg){
+  const el=document.getElementById(id); if(!el) return;
+  killChart(id);
+  state.charts[id]=new Chart(el.getContext('2d'),cfg);
+}
+
+/** Render the six live panels for one arm into `host`. */
+async function renderLivePanels(host, model, prefix){
+  const grid=$('div',{class:'pgrid'});
+  const ids=['qq','rnat','rlog','sloc','hist','rtime'].map(k=>prefix+'_'+k);
+  grid.appendChild(panel(ids[0],'Q–Q plot — log residuals'));
+  grid.appendChild(panel(ids[1],'Residual vs fitted — natural scale'));
+  grid.appendChild(panel(ids[2],'Residual vs fitted — log scale'));
+  grid.appendChild(panel(ids[3],'Scale–location'));
+  grid.appendChild(panel(ids[4],'Log-residual distribution vs normal'));
+  grid.appendChild(panel(ids[5],'Log residual vs time'));
+  host.appendChild(grid);
+
+  let s;
+  try{ s = await getSeries(model); }
+  catch(e){ host.appendChild($('div',{class:'err'},['Series unavailable: '+e.message])); return; }
+
+  const sc=(d,c)=>({datasets:[{data:d,backgroundColor:c,pointRadius:2,borderWidth:0}]});
+  const lo=Math.min(...s.qq.x,...s.qq.y), hi=Math.max(...s.qq.x,...s.qq.y);
+  mkChart(ids[0],{type:'scatter',data:{datasets:[
+    {data:pts(s.qq.x,s.qq.y),backgroundColor:'#10B981',pointRadius:2,borderWidth:0},
+    {type:'line',data:[{x:lo,y:lo},{x:hi,y:hi}],borderColor:'#EF4444',borderWidth:1,
+     borderDash:[5,4],pointRadius:0,fill:false}
+  ]},options:baseOpts('theoretical quantile','standardised residual')});
+  mkChart(ids[1],{type:'scatter',data:sc(pts(s.resid_nat.x,s.resid_nat.y),'rgba(239,68,68,.45)'),
+    options:baseOpts('predicted (ng/mL)','observed − predicted')});
+  mkChart(ids[2],{type:'scatter',data:sc(pts(s.resid_log.x,s.resid_log.y),'rgba(59,130,246,.45)'),
+    options:baseOpts('log predicted','log obs − log pred')});
+  mkChart(ids[3],{type:'scatter',data:sc(pts(s.scale_loc.x,s.scale_loc.y),'rgba(245,158,11,.45)'),
+    options:baseOpts('log predicted','√|standardised residual|')});
+  mkChart(ids[4],{type:'bar',data:{labels:s.hist.x.map(v=>v.toFixed(2)),datasets:[
+    {data:s.hist.y,backgroundColor:'rgba(20,184,166,.65)',barPercentage:1,categoryPercentage:1},
+    {type:'line',data:s.hist.x.map((v,i)=>{
+        const j=s.hist.nx.findIndex(u=>u>=v); return j<0?null:s.hist.ny[j];}),
+     borderColor:'#EF4444',borderWidth:1.6,pointRadius:0,fill:false}
+  ]},options:baseOpts('log residual','density')});
+  const ti=s.resid_time;
+  const tPts=pts(ti.x,ti.y);
+  const tOpts=baseOpts('time (min)','log residual');
+  tOpts.plugins={legend:{display:true,labels:{color:'#cbd5e1',boxWidth:10,font:{size:10}}}};
+  mkChart(ids[5],{
+    type:'scatter',
+    data:{datasets:[
+      {label:'infusion',data:tPts.filter((_,i)=>ti.inf[i]),
+       backgroundColor:'rgba(239,68,68,.5)',pointRadius:2,borderWidth:0},
+      {label:'washout',data:tPts.filter((_,i)=>!ti.inf[i]),
+       backgroundColor:'rgba(59,130,246,.5)',pointRadius:2,borderWidth:0}
+    ]},
+    options:tOpts
+  });
+}
+
+/** Live variance-stabilisation chart (one or many arms) from the boot index. */
+function renderVariance(id, models){
+  const sc = state.diag.scale || {};
+  const ds=[];
+  models.forEach((m,i)=>{
+    const v=sc[m]; if(!v) return;
+    const abl = m.indexOf('PureML')>=0;
+    ds.push({label:m,data:pts(v.centres,v.sd_log),
+      borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',
+      borderWidth:abl?3:1.8,borderDash:abl?[6,4]:[],pointRadius:abl?4:2.5,
+      tension:.25,fill:false,order:abl?0:1});
+  });
+  mkChart(id,{type:'line',data:{datasets:ds},options:{
+    ...baseOpts('predicted concentration (ng/mL)','log-residual SD'),
+    plugins:{legend:{display:models.length>1,
+      labels:{color:'#cbd5e1',boxWidth:10,font:{size:9.5}}},
+      tooltip:{intersect:false,mode:'nearest'}},
+    scales:{x:{...AX,type:'linear',
+        title:{display:true,text:'predicted concentration (ng/mL)',color:'#64748b',font:{size:10}}},
+      y:{...AX,beginAtZero:true,
+        title:{display:true,text:'log-residual SD',color:'#64748b',font:{size:10}}}}}});
+}
+
+/* ===================== figure helpers (export only) ===================== */
+function figUrl(model, kind){
+  return '/api/figure?model='+encodeURIComponent(model)+'&kind='+encodeURIComponent(kind);
+}
+function downloadFig(model, kind){
+  const a = document.createElement('a');
+  a.href = figUrl(model, kind);
+  a.download = (kind==='scale'?'fig_scale_':'fig_diagnostics_')+model+'.png';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function figureBlock(model, kind, title){
+  const w = $('div',{class:'figwrap'});
+  w.appendChild($('h4',{},[ title,
+    $('button',{class:'dl',title:'Save PNG for the thesis',
+      onclick:e=>{e.stopPropagation(); downloadFig(model,kind);}},['↓ PNG']) ]));
+  const img = $('img',{src:figUrl(model,kind),alt:title,loading:'lazy',
+    onclick:()=>openFigure(model,kind)});
+  img.addEventListener('error',()=>{ img.replaceWith(
+    $('div',{class:'hint'},['Figure unavailable — run analysis/diagnostics.py'])); });
+  w.appendChild(img);
+  return w;
+}
+
+/* ===================== figure modal ===================== */
+const _figCache = {};
+function openFigure(model, kind){
+  const m = document.getElementById('modal');
+  const title = kind==='scale'
+    ? model+' — variance stabilisation (natural vs log scale)'
+    : model+' — residual diagnostics (6 panels)';
+  const box = $('div',{class:'mbox'});
+  box.appendChild($('div',{class:'mhead'},[
+    $('span',{class:'mtitle'},[title]),
+    $('button',{class:'mx',onclick:closeFigure},['Close ✕'])
+  ]));
+  const key = model+'|'+kind;
+  if(_figCache[key]){
+    box.appendChild($('img',{src:_figCache[key],alt:title}));
+  }else{
+    box.appendChild($('div',{class:'mspin'},['Loading figure…']));
+    const url = '/api/figure?model='+encodeURIComponent(model)+'&kind='+encodeURIComponent(kind);
+    const img = new Image();
+    img.onload = ()=>{ _figCache[key]=url;
+      const sp = box.querySelector('.mspin'); if(sp){ sp.replaceWith($('img',{src:url,alt:title})); } };
+    img.onerror = ()=>{ const sp=box.querySelector('.mspin');
+      if(sp) sp.textContent = 'Figure unavailable — run analysis/diagnostics.py'; };
+    img.src = url;
+  }
+  m.replaceChildren(box);
+  m.classList.add('on');
+}
+function closeFigure(){ document.getElementById('modal').classList.remove('on'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeFigure(); });
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target.id==='modal') closeFigure();
+});
+
+// ---------- shell ----------
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  const nav = $('nav',{class:'tabs',role:'tablist'});
+  [['trajectory','TCI Trajectory'],['leaderboard','Model Leaderboard'],
+   ['validation','Validation'],['diagnostics','Diagnostics']]
+    .forEach(([id,label])=>{
+      nav.appendChild($('button',{class:'tab'+(state.tab===id?' on':''),role:'tab',
+        'aria-selected':state.tab===id, onclick:()=>{state.tab=id;render();}},[label]));
+    });
+  const brand = $('div',{class:'brand'},[
+    $('span',{class:'dot'}), 'Remifentanil TCI · Grey-box',
+    $('span',{class:'sub'},['Minto (1997) × ML residual · 95% conformal band · live demo'])
+  ]);
+  app.appendChild($('header',{class:'hdr'},[brand, nav]));
+  app.appendChild($('div',{class:'banner',role:'note',html:
+    '<strong>Research / education prototype — not a medical device.</strong> No protected '+
+    'health information is collected or stored; inputs are de-identified physiological covariates only.'}));
+  const main = $('main',{class:'main'});
+  app.appendChild(main);
+  if(state.tab==='trajectory') viewTrajectory(main);
+  else if(state.tab==='leaderboard') viewLeaderboard(main);
+  else if(state.tab==='diagnostics') viewDiagnostics(main);
+  else viewValidation(main);
+  const foot = state.disc ? (state.disc.model+' · '+state.disc.review)
+    : 'Grey-box remifentanil PK · unpublished research';
+  app.appendChild($('footer',{class:'ftr'},[foot]));
+}
+
+// ---------- trajectory ----------
+const T = { age:40, weight:70, height:170, sex:'Male', rate:120, infEnd:20, bolus:70, duration:90 };
+function numField(label,key,step){
+  return $('label',{class:'fld'},[
+    $('span',{},[label]),
+    $('input',{type:'number',value:T[key],step:step||1,'aria-label':label,
+      oninput:e=>{T[key]=parseFloat(e.target.value)||0;}})
+  ]);
+}
+function viewTrajectory(root){
+  if(state.sel.length===0 && state.def) state.sel=[state.def];
+  const sec = $('section');
+  sec.appendChild($('h2',{},['TCI Forward Trajectory']));
+  sec.appendChild($('p',{class:'lead'},[
+    'Concentration over the whole case — Minto mechanistic reference, the grey-box prediction, '+
+    'and a 95% conformal safety band. Overlay any of the eight model families.']));
+  const grid = $('div',{class:'grid'});
+  grid.appendChild(numField('Age (y)','age',1));
+  grid.appendChild(numField('Weight (kg)','weight',0.5));
+  grid.appendChild(numField('Height (cm)','height',0.5));
+  const sexF = $('label',{class:'fld'},[$('span',{},['Sex']),
+    (()=>{const s=$('select',{'aria-label':'Sex',onchange:e=>{T.sex=e.target.value;}});
+      ['Male','Female'].forEach(o=>{const op=$('option',{},[o]); if(o===T.sex)op.selected=true; s.appendChild(op);});
+      return s;})()]);
+  grid.appendChild(sexF);
+  grid.appendChild(numField('Infusion rate (µg/min)','rate',10));
+  grid.appendChild(numField('Infusion end (min)','infEnd',5));
+  grid.appendChild(numField('Induction bolus (µg)','bolus',10));
+  grid.appendChild(numField('Duration (min)','duration',5));
+  sec.appendChild(grid);
+  const chips = $('div',{class:'chips',role:'group','aria-label':'Models to plot'});
+  state.models.forEach(m=>{
+    chips.appendChild($('button',{class:'chip'+(state.sel.includes(m)?' on':''),
+      'aria-pressed':state.sel.includes(m),
+      title:'Select to plot — shows residual diagnostics for this model',
+      onclick:()=>{
+        state.sel = state.sel.includes(m) ? state.sel.filter(x=>x!==m) : [...state.sel,m];
+        render();
+      }},[m]));
+  });
+  sec.appendChild(chips);
+  const btn = $('button',{class:'run'},['▶ Simulate trajectory']);
+  sec.appendChild(btn);
+  const box = $('div',{class:'chartbox'},[$('canvas',{id:'trajCanvas'})]);
+  sec.appendChild(box);
+  const pills = $('div',{class:'pills',id:'trajPills'});
+  pills.appendChild(pill('Minto C_ss','—','ng/mL'));
+  pills.appendChild(pill('C_max','—','ng/mL'));
+  sec.appendChild(pills);
+  root.appendChild(sec);
+
+  btn.addEventListener('click', async ()=>{
+    const chosen = state.sel.length? state.sel : [state.def];
+    const patient = {age:T.age,weight:T.weight,height:T.height,sex:T.sex};
+    const regimen = {infusions:[{start:0,end:T.infEnd,rate:T.rate}],
+      boluses: T.bolus? [{time:0,amt:T.bolus}]:[]};
+    btn.disabled=true; btn.textContent='Simulating…';
+    try{
+      const primary = await postJSON('/api/trajectory',{patient,regimen,duration:T.duration,model:chosen[0]});
+      const others=[];
+      for(let i=1;i<chosen.length;i++)
+        others.push(await postJSON('/api/trajectory',{patient,regimen,duration:T.duration,model:chosen[i]}));
+      drawTraj(primary, others, chosen);
+      const cmax = Math.max.apply(null, primary.pred);
+      document.getElementById('trajPills').replaceChildren(
+        pill('Minto C_ss', primary.Css!=null? primary.Css.toFixed(1):'—','ng/mL'),
+        pill('C_max ('+chosen[0]+')', cmax.toFixed(1),'ng/mL'));
+    }catch(e){ alert(e.message); }
+    finally{ btn.disabled=false; btn.textContent='▶ Simulate trajectory'; }
+  });
+}
+function pill(label,val,unit){
+  return $('div',{class:'pill'},[$('span',{},[label]),$('strong',{},[String(val)]),' '+(unit||'')]);
+}
+function drawTraj(g, others, names){
+  killChart('traj');
+  const t = g.time;
+  const ds = [
+    {label:'target 2–8 ng/mL', data:t.map(()=>8), borderWidth:0, pointRadius:0, fill:'+1', backgroundColor:'rgba(16,185,129,0.06)'},
+    {label:'_tgtlo', data:t.map(()=>2), borderWidth:0, pointRadius:0, fill:false},
+    {label:'95% conformal band', data:g.hi, borderWidth:0, pointRadius:0, fill:'+1', backgroundColor:'rgba(16,185,129,0.15)'},
+    {label:'_cilo', data:g.lo, borderWidth:0, pointRadius:0, fill:false},
+    {label:'Minto plasma (ref)', data:g.Cp_minto, borderColor:'#A855F7', borderDash:[6,3], borderWidth:3, pointRadius:0, fill:false, tension:0.15},
+    {label:'Minto effect-site Ce', data:g.Ce_minto, borderColor:'#22D3EE', borderDash:[2,3], borderWidth:2, pointRadius:0, fill:false, tension:0.15},
+    {label:names[0], data:g.pred, borderColor:COLORS[0], borderWidth:3, pointRadius:0, fill:false, tension:0.15},
+  ];
+  others.forEach((o,i)=> ds.push({label:names[i+1], data:o.pred, borderColor:COLORS[(i+1)%COLORS.length], borderWidth:1.8, pointRadius:0, fill:false, tension:0.15}));
+  const ctx = document.getElementById('trajCanvas').getContext('2d');
+  state.charts.traj = new Chart(ctx,{type:'line', data:{labels:t, datasets:ds}, options:{
+    responsive:true, maintainAspectRatio:false, animation:{duration:250},
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{filter:i=>i.text[0]!=='_', color:'#cbd5e1', boxWidth:12, font:{size:11}}}},
+    scales:{
+      x:{title:{display:true,text:'Time (min)',color:'#94a3b8'},ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,0.05)'}},
+      y:{title:{display:true,text:'Concentration (ng/mL)',color:'#94a3b8'},ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,0.05)'},min:0}
+    }}});
+}
+
+// ---------- leaderboard ----------
+function verdictColor(v){
+  if(v==='better than Minto') return '#10B981';
+  if(v==='worse than Minto')  return '#EF4444';
+  if(v==='baseline')          return '#A855F7';
+  return '#64748B';                       // no significant difference
+}
+
+async function viewLeaderboard(root){
+  const sec = $('section');
+  sec.appendChild($('h2',{},['Cross-Validated Model Comparison']));
+  sec.appendChild($('p',{class:'lead'},[
+    'Every one of the 65 subjects held out exactly once (5-fold, split at patient level). '+
+    'Mean per-subject MAE with a 95% confidence interval bootstrapped over subjects — '+
+    'because the unit of independence is the patient, not the blood sample.']));
+
+  // systems-view explainer for evaluators
+  sec.appendChild($('div',{class:'banner',html:
+    '<strong>How to read this.</strong> The bars are 95% confidence intervals, not point '+
+    'estimates. Where intervals overlap, the models are <em>not</em> statistically '+
+    'distinguishable. The verdict column reports a paired bootstrap against the Minto '+
+    'baseline: an arm counts as better or worse only if the interval on the difference '+
+    'excludes zero.'}));
+
+  const box = $('div',{class:'chartbox'},[$('canvas',{id:'lbCanvas'})]);
+  sec.appendChild(box);
+  const wrap = $('div',{class:'tablewrap',id:'lbTable'},['Loading…']);
+  sec.appendChild(wrap);
+  const note = $('div',{id:'lbNote'});
+  sec.appendChild(note);
+  root.appendChild(sec);
+
+  try{
+    const rows = await getJSON('/api/leaderboard');
+    killChart('lb');
+    // floating bars: each bar spans [MAE_lo, MAE_hi] = the 95% CI
+    state.charts.lb = new Chart(document.getElementById('lbCanvas').getContext('2d'),{
+      type:'bar',
+      data:{ labels: rows.map(r=>r.model),
+        datasets:[{
+          label:'95% CI of mean per-subject MAE',
+          data: rows.map(r=>[r.MAE_lo, r.MAE_hi]),
+          backgroundColor: rows.map(r=>verdictColor(r.vs_Minto)+'66'),
+          borderColor: rows.map(r=>verdictColor(r.vs_Minto)),
+          borderWidth:1.5, borderSkipped:false, barPercentage:0.62
+        }]},
+      options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        plugins:{ legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>{
+            const r = rows[ctx.dataIndex];
+            return ` MAE ${r.MAE.toFixed(2)}  CI [${r.MAE_lo.toFixed(2)}, ${r.MAE_hi.toFixed(2)}] · ${r.vs_Minto}`;
+          }}}},
+        scales:{
+          x:{title:{display:true,text:'Mean per-subject MAE (ng/mL) — bars are 95% CIs',color:'#94a3b8'},
+             ticks:{color:'#94a3b8'}, grid:{color:'rgba(255,255,255,0.05)'}},
+          y:{ticks:{color:'#cbd5e1',font:{size:11}}, grid:{display:false}}}}});
+
+    const head = ['Model','Role','MAE','95% CI','MDAPE %','MDPE %','Wobble','Cov %','vs Minto'];
+    const table = $('table');
+    const thead = $('thead'); const htr = $('tr');
+    head.forEach(h=>htr.appendChild($('th',{},[h]))); thead.appendChild(htr); table.appendChild(thead);
+    const tb = $('tbody');
+    rows.forEach(r=>{
+      const tr = $('tr', r.model.indexOf('Minto')>=0 ? {class:'ref'} : {});
+      const cov = r.coverage==null ? '—' : r.coverage.toFixed(0);
+      const cells = [
+        r.model,
+        r.role,
+        r.MAE.toFixed(2),
+        `[${r.MAE_lo.toFixed(2)}, ${r.MAE_hi.toFixed(2)}]`,
+        r.MDAPE.toFixed(1),
+        r.MDPE.toFixed(1),
+        r.wobble==null ? '—' : r.wobble.toFixed(1),
+        cov
+      ];
+      cells.forEach((c,i)=>{
+        const td = $('td',{},[String(c)]);
+        if(i===1) td.style.cssText='font-size:.72rem;color:#94a3b8;text-align:left;max-width:230px';
+        tr.appendChild(td);
+      });
+      const vt = $('td',{},[r.vs_Minto]);
+      vt.style.cssText = 'color:'+verdictColor(r.vs_Minto)+';font-weight:600;white-space:nowrap';
+      tr.appendChild(vt);
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb);
+    wrap.replaceChildren(table);
+
+    const sig = rows.filter(r=>r.vs_Minto==='better than Minto').map(r=>r.model);
+    note.replaceChildren($('div',{class:'banner',html:
+      '<strong>Result.</strong> Arms significantly better than the Minto baseline: '+
+      '<strong>'+(sig.length? sig.join(', ') : 'none')+'</strong>. The grey-box families reach '+
+      'parity with the mechanistic model, while the ablation arm (ML with no mechanistic base) '+
+      'is significantly worse — evidence that the pharmacological structure is doing the work. '+
+      'Note the Minto baseline is scored <em>in-sample</em> on the cohort it was fitted to, so '+
+      'this comparison is handicapped against the ML arms.'}));
+  }catch(e){ wrap.replaceChildren($('div',{class:'err'},['Failed to load leaderboard: '+e.message])); }
+}
+
+// ---------- validation ----------
+async function viewValidation(root){
+  const sec = $('section');
+  sec.appendChild($('h2',{},['Validation Diagnostics']));
+  sec.appendChild($('p',{class:'lead'},[
+    'Residual analysis on out-of-fold patients — every prediction is made by a model that never saw that subject in training. Detects magnitude and phase-dependent bias that a '+
+    'single R² would hide.']));
+  const selWrap = $('label',{class:'fld inline'},[$('span',{},['Model'])]);
+  const sel = $('select',{'aria-label':'Model'});
+  state.models.forEach(m=>{ const op=$('option',{},[m]); if(m===state.def)op.selected=true; sel.appendChild(op); });
+  selWrap.appendChild(sel); sec.appendChild(selWrap);
+  const pills = $('div',{class:'pills',id:'valPills'});
+  sec.appendChild(pills);
+  const box = $('div',{class:'chartbox'},[$('canvas',{id:'valCanvas'})]);
+  sec.appendChild(box);
+  root.appendChild(sec);
+  async function load(model){
+    try{
+      const v = await getJSON('/api/validation?model='+encodeURIComponent(model));
+      document.getElementById('valPills').replaceChildren(
+        pill('Overall bias', v.bias.toFixed(2),'ng/mL'),
+        pill('Bias · infusion', v.bias_infusion!=null? v.bias_infusion.toFixed(2):'—',''),
+        pill('Bias · washout', v.bias_washout!=null? v.bias_washout.toFixed(2):'—',''));
+      const inf=[], wash=[];
+      for(let i=0;i<v.time.length;i++){ (v.is_infusion[i]?inf:wash).push({x:v.time[i], y:v.residual[i]}); }
+      killChart('val');
+      state.charts.val = new Chart(document.getElementById('valCanvas').getContext('2d'),{
+        type:'scatter', data:{datasets:[
+          {label:'infusion', data:inf, backgroundColor:'#EF4444'},
+          {label:'washout', data:wash, backgroundColor:'#3B82F6'}]},
+        options:{responsive:true, maintainAspectRatio:false,
+          plugins:{legend:{labels:{color:'#cbd5e1'}}},
+          scales:{x:{title:{display:true,text:'Time (min)',color:'#94a3b8'},ticks:{color:'#94a3b8'}},
+            y:{title:{display:true,text:'Residual (obs − pred, ng/mL)',color:'#94a3b8'},ticks:{color:'#94a3b8'}}}}});
+    }catch(e){ document.getElementById('valPills').replaceChildren($('div',{class:'err'},['Failed: '+e.message])); }
+  }
+  sel.addEventListener('change', e=>load(e.target.value));
+  load(state.def);
+}
+
+// ---------- diagnostics tab ----------
+const D = { sel:'XGBoost', cmp:'PureML_noMinto', mode:'deep', sort:'model', asc:true };
+
+function viewDiagnostics(root){
+  const sec = $('section');
+  sec.appendChild($('h2',{},['Residual Diagnostics']));
+  sec.appendChild($('p',{class:'lead'},[
+    'Assumption checks behind the regression metrics. Each diagnostic justifies a '+
+    'methodology choice: heteroscedasticity → the multiplicative grey-box form; '+
+    'non-normality → conformal rather than Gaussian intervals; serial correlation → '+
+    'subject-level CV and cluster bootstrap.']));
+
+  if(!state.diag || !state.diag.toasts){
+    sec.appendChild($('div',{class:'err'},[
+      'Diagnostics unavailable — run analysis/diagnostics.py, then restart the server.']));
+    root.appendChild(sec); return;
+  }
+
+  const grid = $('div',{class:'dgrid'});
+  // ---- left: sortable comparison table ----
+  const tcard = $('div',{class:'dcard'});
+  tcard.appendChild($('h3',{},['All arms compared']));
+  tcard.appendChild($('p',{class:'hint'},[
+    'Click a column to sort, a row to inspect. Log-scale residuals. '+
+    'DW → 2.0 means independent; SD ratio → 1.0 means homoscedastic.']));
+  tcard.appendChild(diagTable());
+  grid.appendChild(tcard);
+
+  // ---- right: N-polygon radar ----
+  const rcard = $('div',{class:'dcard'});
+  rcard.appendChild($('h3',{},['Model profile — N-polygon']));
+  rcard.appendChild($('p',{class:'hint'},[
+    'Six normalised axes. Selected model solid, comparison model dashed.']));
+  rcard.appendChild($('div',{style:'height:330px'},[$('canvas',{id:'radarCanvas'})]));
+  const rad = state.diag.radar;
+  if(rad && rad.caveat){
+    const foot = $('div',{class:'foot'});
+    foot.appendChild($('span',{class:'qm',title:rad.caveat_detail||''},['?']));
+    const txt = $('span',{},[rad.caveat+' ']);
+    const more = $('span',{class:'more',role:'button',tabindex:'0'},['why']);
+    let open=false; let box=null;
+    const toggle=()=>{
+      open=!open;
+      if(open){ box=$('div',{class:'footx'},[rad.caveat_detail||'']); rcard.appendChild(box); more.textContent='hide'; }
+      else if(box){ box.remove(); box=null; more.textContent='why'; }
+    };
+    more.addEventListener('click',toggle);
+    more.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();} });
+    txt.appendChild(more);
+    foot.appendChild(txt);
+    rcard.appendChild(foot);
+  }
+  grid.appendChild(rcard);
+  sec.appendChild(grid);
+
+  // ---- mode switcher: top-level toolbar, no intermediate "Detail" heading ----
+  const modes = $('div',{class:'modes',role:'tablist','aria-label':'View mode',
+    style:'margin-top:22px'});
+  [['deep','Deep-dive'],['compare','Compare two'],['gallery','All models']]
+    .forEach(([id,label])=>{
+      modes.appendChild($('button',{class:'mode'+(D.mode===id?' on':''),role:'tab',
+        'aria-selected':D.mode===id,
+        onclick:()=>{ D.mode=id; render(); }},[label]));
+    });
+  // context line so the current selection is always visible without nesting
+  modes.appendChild($('span',{style:'margin-left:auto;align-self:center;font-size:.76rem;color:var(--muted)'},
+    [D.mode==='gallery' ? 'all 10 arms' : ('showing '+D.sel+(D.mode==='compare'?' vs '+D.cmp:''))]));
+  sec.appendChild(modes);
+
+  const detail = $('div',{id:'dDetail'});
+  sec.appendChild(detail);
+  root.appendChild(sec);
+
+  renderDetail(detail);
+  drawRadar();
+}
+
+/** PNGs are export artefacts for the thesis, not the on-screen display. */
+function exportRow(model){
+  const r = $('div',{class:'exp'},['Publication export:']);
+  if(model){
+    r.appendChild($('button',{class:'dl',onclick:()=>downloadFig(model,'scale')},
+      ['↓ '+model+' variance']));
+    r.appendChild($('button',{class:'dl',onclick:()=>downloadFig(model,'diagnostics')},
+      ['↓ '+model+' 6-panel']));
+    r.appendChild($('span',{class:'more',role:'button',tabindex:'0',
+      onclick:()=>openFigure(model,'diagnostics')},['preview print version']));
+  }else{
+    r.appendChild($('button',{class:'dl',onclick:()=>downloadFig('ALL','scale')},
+      ['↓ all-arms overlay']));
+    r.appendChild($('span',{},['300 dpi-ready PNGs for the report.']));
+  }
+  return r;
+}
+
+function diagTable(){
+  const arms = state.diag.models;
+  const rows = arms.map(m=>{
+    const t = state.diag.toasts[m], s = t.stats;
+    return {model:m, skew:s.skew, kurt:s.kurtosis, dw:s.durbin_watson, icc:s.icc,
+            sdr:s.sd_ratio_log, ad:s.anderson_darling_star, ok:t.heteroscedasticity_ok};
+  });
+  const key = D.sort, asc = D.asc ? 1 : -1;
+  rows.sort((a,b)=> key==='model'
+    ? asc*a.model.localeCompare(b.model)
+    : asc*(a[key]-b[key]));
+
+  const cols = [['model','Model'],['skew','Skew'],['kurt','Kurt'],['ad','AD*'],
+                ['dw','DW'],['icc','ICC'],['sdr','SD ratio']];
+  const wrap = $('div',{style:'overflow-x:auto;max-height:420px;overflow-y:auto'});
+  const tb = $('table',{class:'dt'});
+  const thead = $('thead'), htr = $('tr');
+  cols.forEach(([k,label])=>{
+    htr.appendChild($('th',{title:'Sort by '+label,
+      onclick:()=>{ if(D.sort===k) D.asc=!D.asc; else {D.sort=k; D.asc=(k==='model');} render(); }},[
+      label, $('span',{class:'ar'},[D.sort===k ? (D.asc?'▲':'▼') : '↕'])]));
+  });
+  thead.appendChild(htr); tb.appendChild(thead);
+  const body = $('tbody');
+  rows.forEach(r=>{
+    const isAbl = r.model.indexOf('PureML')>=0;
+    const tr = $('tr',{class:(r.model===D.sel?'sel ':'')+(isAbl?'abl':''),
+      title:'Inspect '+r.model,
+      onclick:()=>{ D.sel=r.model; render(); }});
+    tr.appendChild($('td',{},[r.model]));
+    tr.appendChild($('td',{},[r.skew.toFixed(2)]));
+    tr.appendChild($('td',{},[r.kurt.toFixed(2)]));
+    tr.appendChild($('td',{},[r.ad.toFixed(1)]));
+    tr.appendChild($('td',{},[r.dw.toFixed(2)]));
+    tr.appendChild($('td',{},[r.icc.toFixed(2)]));
+    const sd = $('td',{class:r.sdr<3?'ok':'bad'},[r.sdr.toFixed(2)+'×']);
+    tr.appendChild(sd);
+    body.appendChild(tr);
+  });
+  tb.appendChild(body); wrap.appendChild(tb);
+  return wrap;
+}
+
+function drawRadar(){
+  const rad = state.diag.radar;
+  if(!rad || !document.getElementById('radarCanvas')) return;
+  killChart('radar');
+  const axes = rad.axes;
+  const mk = (m,solid)=>({
+    label:m, data:axes.map(a=>rad.scores[m][a]),
+    borderColor: solid?'#10B981':'#F59E0B',
+    backgroundColor: solid?'rgba(16,185,129,0.18)':'rgba(245,158,11,0.10)',
+    borderWidth:2, borderDash: solid?[]:[5,4], pointRadius:3,
+    pointBackgroundColor: solid?'#10B981':'#F59E0B'
+  });
+  const ds = [mk(D.sel,true)];
+  if(D.mode==='compare' && D.cmp && D.cmp!==D.sel) ds.push(mk(D.cmp,false));
+  state.charts.radar = new Chart(document.getElementById('radarCanvas').getContext('2d'),{
+    type:'radar', data:{labels:axes, datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false,
+      animation:{duration:260},        // short + interruptible
+      plugins:{legend:{labels:{color:'#cbd5e1',boxWidth:12,font:{size:11}}},
+        tooltip:{callbacks:{afterLabel:c=>rad.axis_help[c.label]||''}}},
+      scales:{r:{min:0,max:1.15,
+        angleLines:{color:'rgba(255,255,255,0.08)'},
+        grid:{color:'rgba(255,255,255,0.08)'},
+        pointLabels:{color:'#94a3b8',font:{size:10}},
+        ticks:{display:false}}}}});
+}
+
+function renderDetail(host){
+  host.replaceChildren();
+  const t = state.diag.toasts[D.sel];
+  const interp = state.diag.interpretations && state.diag.interpretations[D.sel];
+
+  if(D.mode==='deep'){
+    // live variance chart
+    const hero = $('div',{class:'hero'});
+    hero.appendChild($('h4',{},[D.sel+' — variance stabilisation (log-residual SD)']));
+    hero.appendChild($('div',{style:'height:250px'},[$('canvas',{id:'varOne'})]));
+    host.appendChild(hero);
+    renderVariance('varOne',[D.sel]);
+    // live six-panel diagnostics
+    renderLivePanels(host, D.sel, 'dp');
+    if(t){
+      const v = $('div',{class:'interp'});
+      v.appendChild($('div',{},['• '+t.heteroscedasticity]));
+      v.appendChild($('div',{},['• '+t.normality]));
+      v.appendChild($('div',{},['• '+t.independence]));
+      host.appendChild(v);
+    }
+    if(interp) host.appendChild($('div',{class:'interp',
+      html:'<b>Interpretation.</b> '+interp.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}));
+    host.appendChild(exportRow(D.sel));
+
+  }else if(D.mode==='compare'){
+    const pick = $('div',{class:'picker'},['Comparing ',
+      $('b',{style:'color:#6ee7b7'},[D.sel]),' against ']);
+    const sel = $('select',{'aria-label':'Comparison model',
+      onchange:e=>{ D.cmp=e.target.value; render(); }});
+    state.diag.models.filter(m=>m!==D.sel).forEach(m=>{
+      const o=$('option',{},[m]); if(m===D.cmp)o.selected=true; sel.appendChild(o); });
+    pick.appendChild(sel);
+    pick.appendChild($('span',{},[' — pick a row on the left to change the primary.']));
+    host.appendChild(pick);
+    const other = (D.cmp && D.cmp!==D.sel) ? D.cmp : state.diag.models.find(m=>m!==D.sel);
+    // both arms overlaid on ONE live variance chart — far clearer than two plots
+    const hero = $('div',{class:'hero'});
+    hero.appendChild($('h4',{},['Variance stabilisation — '+D.sel+' vs '+other]));
+    hero.appendChild($('div',{style:'height:260px'},[$('canvas',{id:'varCmp'})]));
+    host.appendChild(hero);
+    renderVariance('varCmp',[D.sel,other]);
+
+    const g = $('div',{class:'cmp'});
+    [[D.sel,'a'],[other,'b']].forEach(([m,pre])=>{
+      const col = $('div');
+      col.appendChild($('div',{class:'panel-t',
+        style:'font-size:.84rem;color:var(--ink);margin-bottom:8px'},[m]));
+      renderLivePanels(col, m, 'cmp'+pre);
+      const tt = state.diag.toasts[m];
+      if(tt) col.appendChild($('div',{class:'interp'},[
+        '• '+tt.heteroscedasticity,' ','• '+tt.independence]));
+      col.appendChild(exportRow(m));
+      g.appendChild(col);
+    });
+    host.appendChild(g);
+
+  }else{
+    // One live chart with every arm overlaid — hoverable, legend-toggleable.
+    const hero = $('div',{class:'hero'});
+    hero.appendChild($('h4',{},['All arms on shared axes — click a legend entry to isolate',
+      $('button',{class:'dl',onclick:()=>downloadFig('ALL','scale')},['↓ PNG'])]));
+    hero.appendChild($('div',{style:'height:420px'},[$('canvas',{id:'varAll'})]));
+    host.appendChild(hero);
+    renderVariance('varAll', state.diag.models);
+    host.appendChild($('p',{class:'hint'},[
+      'Log-residual SD across the concentration range. A flat line means the log '+
+      'transform has stabilised the variance; the dashed ablation sits ~2× above the '+
+      'candidate models throughout. Hover for values, click legend entries to isolate.']));
+    host.appendChild(exportRow(null));
+  }
+}
+
+// ---------- boot ----------
+(async function(){
+  const app = document.getElementById('app');
+  try{
+    const m = await getJSON('/api/models');
+    state.models = m.models; state.def = m.default;
+    try{ state.disc = await getJSON('/api/disclaimer'); }catch(_){}
+    // Fetch the ENTIRE diagnostics index once (verdict strings only, ~few KB).
+    // Every subsequent toast is then instant and offline. Figures stay lazy.
+    try{ state.diag = await getJSON('/api/diagnostics'); }catch(_){ state.diag = null; }
+    render();
+  }catch(e){
+    app.appendChild($('div',{class:'err'},['Backend error: '+e.message+'. Is the demo server running?']));
+  }
+})();
+</script>
+</body>
+</html>

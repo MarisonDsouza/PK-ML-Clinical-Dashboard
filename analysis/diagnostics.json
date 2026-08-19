@@ -1,0 +1,1213 @@
+{
+  "Minto": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.4937047630319069,
+      "sd": 7.834534628257777,
+      "skew": 1.5581624091998956,
+      "kurtosis": 12.042593407041155,
+      "jarque_bera": 7592.837999603607,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 144.05682567255144,
+      "anderson_darling_star": 144.1111456193599,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 481.0327436314351,
+      "breusch_pagan_p": 1.2735660161807571e-106,
+      "breusch_pagan_R2": 0.24148230101979673,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6409267344835498,
+      "dw_n_subjects": 65,
+      "icc": 0.2577034439751874,
+      "tercile_sd": [
+        0.7782599463603677,
+        4.307346413945895,
+        12.833488666142125
+      ],
+      "tercile_sd_ratio": 16.489977065066213
+    },
+    "log": {
+      "n": 1971,
+      "mean": -0.00019633013843104564,
+      "sd": 0.28892871256016844,
+      "skew": 0.3730233033209404,
+      "kurtosis": 4.477274196349525,
+      "jarque_bera": 224.9341819933342,
+      "jarque_bera_p": 1.4327254795409522e-49,
+      "anderson_darling": 12.090479920353573,
+      "anderson_darling_star": 12.09508756208771,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 310.859993168002,
+      "breusch_pagan_p": 1.418671333668233e-69,
+      "breusch_pagan_R2": 0.15771689151090917,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3323648639025331,
+      "dw_n_subjects": 65,
+      "icc": 0.35792268438128505,
+      "tercile_sd": [
+        0.4049729492660651,
+        0.20113952626830198,
+        0.21436143075555725
+      ],
+      "tercile_sd_ratio": 2.013393174277778
+    },
+    "toast": {
+      "arm": "Minto",
+      "stats": {
+        "skew": 0.3730233033209404,
+        "kurtosis": 4.477274196349525,
+        "durbin_watson": 0.3323648639025331,
+        "icc": 0.35792268438128505,
+        "sd_ratio_log": 2.013393174277778,
+        "sd_ratio_natural": 16.489977065066213,
+        "anderson_darling_star": 12.09508756208771
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 16.5x -> 2.0x (8x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.37, kurtosis 4.48) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.33 vs 2.0; ICC 0.36) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.3770234526423002,
+        3.1563669443877007,
+        11.886531176761142,
+        22.32186403275407,
+        42.10521070612931,
+        66.16307345444785
+      ],
+      "sd_natural": [
+        0.26113049448480985,
+        1.136845433887112,
+        2.477949522487909,
+        5.813702487506436,
+        10.316816899862928,
+        14.956159815081277
+      ],
+      "sd_log": [
+        0.46458115960136964,
+        0.32793255452862335,
+        0.19140425761034802,
+        0.21060749913848165,
+        0.237960452537289,
+        0.18814115624209626
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_Minto.png",
+      "scale": "figs/fig_scale_Minto.png"
+    },
+    "interpretation": "**Minto** is the mechanistic baseline, fitted on this very cohort. It explains 94.1% of the variance (R\u00b2 0.941), with RMSE 7.85 and MAE 4.11 ng/mL. Residual dispersion falls from 16.5x across concentration terciles on the natural scale to 2.0x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.37) but heavy-tailed (kurtosis 4.48 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.33 (against 2.0 for independence) and an intraclass correlation of 0.36 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "BayesianCompartment": {
+    "natural": {
+      "n": 1992,
+      "mean": -0.16435666808998706,
+      "sd": 8.671835974594371,
+      "skew": -1.5378149680585191,
+      "kurtosis": 20.74532305989112,
+      "jarque_bera": 26921.547170318958,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 136.94452739139933,
+      "anderson_darling_star": 136.9961654821936,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 675.4570396206668,
+      "breusch_pagan_p": 6.4993220748254385e-149,
+      "breusch_pagan_R2": 0.3390848592473227,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.5773324789107721,
+      "dw_n_subjects": 65,
+      "icc": 0.2508199163072664,
+      "tercile_sd": [
+        0.7182867791089547,
+        4.59733953062426,
+        14.244262353879575
+      ],
+      "tercile_sd_ratio": 19.83088477773431
+    },
+    "log": {
+      "n": 1978,
+      "mean": -0.017045859535120594,
+      "sd": 0.2983716279565361,
+      "skew": -0.03863308214171714,
+      "kurtosis": 4.306056515086445,
+      "jarque_bera": 141.07703252122116,
+      "jarque_bera_p": 2.320126296179289e-31,
+      "anderson_darling": 5.928470376246196,
+      "anderson_darling_star": 5.930721688931823,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 288.9863290087893,
+      "breusch_pagan_p": 8.268511969108843e-65,
+      "breusch_pagan_R2": 0.146100267446304,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.29185644209029243,
+      "dw_n_subjects": 65,
+      "icc": 0.3711722610911695,
+      "tercile_sd": [
+        0.4105609345199531,
+        0.2168056465195337,
+        0.22378244590195198
+      ],
+      "tercile_sd_ratio": 1.8936819271584908
+    },
+    "toast": {
+      "arm": "BayesianCompartment",
+      "stats": {
+        "skew": -0.03863308214171714,
+        "kurtosis": 4.306056515086445,
+        "durbin_watson": 0.29185644209029243,
+        "icc": 0.3711722610911695,
+        "sd_ratio_log": 1.8936819271584908,
+        "sd_ratio_natural": 19.83088477773431,
+        "anderson_darling_star": 5.930721688931823
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 19.8x -> 1.9x (10x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew -0.04, kurtosis 4.31) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.29 vs 2.0; ICC 0.37) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.3939519265322433,
+        3.0939034370838163,
+        11.726399836355071,
+        22.190055670621575,
+        40.85762624956132,
+        64.56711422887656
+      ],
+      "sd_natural": [
+        0.2571000165670212,
+        1.0179944359611495,
+        2.6398213093289367,
+        6.031423065051639,
+        11.064352573667165,
+        16.380803612872892
+      ],
+      "sd_log": [
+        0.4768169018059844,
+        0.3273247703675782,
+        0.2123570767027129,
+        0.22298494945914157,
+        0.2529455777722361,
+        0.18700832105968795
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_BayesianCompartment.png",
+      "scale": "figs/fig_scale_BayesianCompartment.png"
+    },
+    "interpretation": "**BayesianCompartment** is a grey-box arm (Minto base with an ML residual correction). It explains 92.8% of the variance (R\u00b2 0.928), with RMSE 8.67 and MAE 4.52 ng/mL. Residual dispersion falls from 19.8x across concentration terciles on the natural scale to 1.9x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew -0.04) but heavy-tailed (kurtosis 4.31 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.29 (against 2.0 for independence) and an intraclass correlation of 0.37 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "SupportVectorRobust": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.052194677410448295,
+      "sd": 8.07646327798778,
+      "skew": 0.8664423229043516,
+      "kurtosis": 9.752078967319557,
+      "jarque_bera": 4033.2571448576914,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 117.11087351122205,
+      "anderson_darling_star": 117.15503286563045,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 489.939371634766,
+      "breusch_pagan_p": 1.4689403491741416e-108,
+      "breusch_pagan_R2": 0.2459534998166496,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.5984864851544244,
+      "dw_n_subjects": 65,
+      "icc": 0.24412300350130653,
+      "tercile_sd": [
+        0.7099962268630265,
+        4.6719220138206765,
+        13.168378669895052
+      ],
+      "tercile_sd_ratio": 18.54711077561193
+    },
+    "log": {
+      "n": 1977,
+      "mean": -0.015503715259822583,
+      "sd": 0.2863482769414812,
+      "skew": 0.06527385322269748,
+      "kurtosis": 4.271951748044719,
+      "jarque_bera": 134.67521312937748,
+      "jarque_bera_p": 5.6970370570225314e-30,
+      "anderson_darling": 4.43064949540917,
+      "anderson_darling_star": 4.43233286900079,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 205.68843122065127,
+      "breusch_pagan_p": 1.1983217501525255e-46,
+      "breusch_pagan_R2": 0.10404068347023332,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.341372304653771,
+      "dw_n_subjects": 65,
+      "icc": 0.39505503730457897,
+      "tercile_sd": [
+        0.380755889813701,
+        0.2167477187417811,
+        0.23190543221786586
+      ],
+      "tercile_sd_ratio": 1.756677726639921
+    },
+    "toast": {
+      "arm": "SupportVectorRobust",
+      "stats": {
+        "skew": 0.06527385322269748,
+        "kurtosis": 4.271951748044719,
+        "durbin_watson": 0.341372304653771,
+        "icc": 0.39505503730457897,
+        "sd_ratio_log": 1.756677726639921,
+        "sd_ratio_natural": 18.54711077561193,
+        "anderson_darling_star": 4.43233286900079
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 18.5x -> 1.8x (11x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.07, kurtosis 4.27) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.34 vs 2.0; ICC 0.40) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.3972726695926323,
+        3.0060646351410267,
+        11.620615730043948,
+        22.962607110763415,
+        43.21958837221449,
+        64.38298739029267
+      ],
+      "sd_natural": [
+        0.24451514205600292,
+        1.023176769539122,
+        2.5591758214424565,
+        6.182961407110889,
+        11.33082023686304,
+        14.850142774384116
+      ],
+      "sd_log": [
+        0.4376506373459114,
+        0.31304455514061214,
+        0.20775412332986395,
+        0.22452203455778538,
+        0.26020498882714294,
+        0.19993900553567218
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_SupportVectorRobust.png",
+      "scale": "figs/fig_scale_SupportVectorRobust.png"
+    },
+    "interpretation": "**SupportVectorRobust** is a grey-box arm (Minto base with an ML residual correction). It explains 93.7% of the variance (R\u00b2 0.937), with RMSE 8.07 and MAE 4.50 ng/mL. Residual dispersion falls from 18.5x across concentration terciles on the natural scale to 1.8x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.07) but heavy-tailed (kurtosis 4.27 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.34 (against 2.0 for independence) and an intraclass correlation of 0.40 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "RandomForest": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.3687705443005754,
+      "sd": 7.799187482714276,
+      "skew": 1.3228188828174086,
+      "kurtosis": 10.930992294217422,
+      "jarque_bera": 5801.703150504813,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 129.21665843144092,
+      "anderson_darling_star": 129.26538255110685,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 446.9368475475153,
+      "breusch_pagan_p": 3.3477060662799567e-99,
+      "breusch_pagan_R2": 0.22436588732304985,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6261742485467823,
+      "dw_n_subjects": 65,
+      "icc": 0.2699204624912287,
+      "tercile_sd": [
+        0.7237240582552955,
+        4.407791931441559,
+        12.739530655988744
+      ],
+      "tercile_sd_ratio": 17.602745840314242
+    },
+    "log": {
+      "n": 1978,
+      "mean": -0.01142171577743862,
+      "sd": 0.2864290815737204,
+      "skew": 0.4601377694367631,
+      "kurtosis": 4.776722960991982,
+      "jarque_bera": 329.96761504515507,
+      "jarque_bera_p": 2.2307083326463008e-72,
+      "anderson_darling": 9.270221473223728,
+      "anderson_darling_star": 9.27374180239411,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 254.1446557589942,
+      "breusch_pagan_p": 3.2426226709466974e-57,
+      "breusch_pagan_R2": 0.1284856702522721,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3388942116926663,
+      "dw_n_subjects": 65,
+      "icc": 0.3692791821537909,
+      "tercile_sd": [
+        0.3935698453778048,
+        0.20367021322419543,
+        0.2232622588538028
+      ],
+      "tercile_sd_ratio": 1.9323878496880262
+    },
+    "toast": {
+      "arm": "RandomForest",
+      "stats": {
+        "skew": 0.4601377694367631,
+        "kurtosis": 4.776722960991982,
+        "durbin_watson": 0.3388942116926663,
+        "icc": 0.3692791821537909,
+        "sd_ratio_log": 1.9323878496880262,
+        "sd_ratio_natural": 17.602745840314242,
+        "anderson_darling_star": 9.27374180239411
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 17.6x -> 1.9x (9x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.46, kurtosis 4.78) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.34 vs 2.0; ICC 0.37) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.3670811666786298,
+        2.9862315826370294,
+        11.844049622322597,
+        22.66963926432581,
+        42.29202050476745,
+        65.6596581504398
+      ],
+      "sd_natural": [
+        0.2841154996903081,
+        1.0333213573812745,
+        2.442753418269089,
+        5.831547559410417,
+        11.008721017675994,
+        14.328772194803076
+      ],
+      "sd_log": [
+        0.4592135988936615,
+        0.3113584822891035,
+        0.19301940987115968,
+        0.21391673420233268,
+        0.2547729836285571,
+        0.18771922354187073
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_RandomForest.png",
+      "scale": "figs/fig_scale_RandomForest.png"
+    },
+    "interpretation": "**RandomForest** is a grey-box arm (Minto base with an ML residual correction). It explains 94.2% of the variance (R\u00b2 0.942), with RMSE 7.81 and MAE 4.22 ng/mL. Residual dispersion falls from 17.6x across concentration terciles on the natural scale to 1.9x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.46) but heavy-tailed (kurtosis 4.78 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.34 (against 2.0 for independence) and an intraclass correlation of 0.37 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "ExtraTrees": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.35972604345068043,
+      "sd": 7.945986620444747,
+      "skew": 1.29002302747354,
+      "kurtosis": 10.860142302563379,
+      "jarque_bera": 5680.3933969621285,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 126.69231565121527,
+      "anderson_darling_star": 126.74008790924667,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 391.5616556249138,
+      "breusch_pagan_p": 3.783595162345084e-87,
+      "breusch_pagan_R2": 0.19656709619724588,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6032727637807628,
+      "dw_n_subjects": 65,
+      "icc": 0.27580464619802864,
+      "tercile_sd": [
+        0.744696325587387,
+        4.516005616782531,
+        12.971928192575344
+      ],
+      "tercile_sd_ratio": 17.419084460157098
+    },
+    "log": {
+      "n": 1975,
+      "mean": -0.009839899897863909,
+      "sd": 0.30345739462473964,
+      "skew": 0.5168146062163153,
+      "kurtosis": 5.139304432345475,
+      "jarque_bera": 464.5375119174172,
+      "jarque_bera_p": 1.3395562919121842e-101,
+      "anderson_darling": 12.508905807369956,
+      "anderson_darling_star": 12.513663240285252,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 269.37584211827686,
+      "breusch_pagan_p": 1.552180826444892e-60,
+      "breusch_pagan_R2": 0.13639283145229208,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3175260396323374,
+      "dw_n_subjects": 65,
+      "icc": 0.3770792024959961,
+      "tercile_sd": [
+        0.4225448101957255,
+        0.2101828955110271,
+        0.2316429111973774
+      ],
+      "tercile_sd_ratio": 2.010367252617647
+    },
+    "toast": {
+      "arm": "ExtraTrees",
+      "stats": {
+        "skew": 0.5168146062163153,
+        "kurtosis": 5.139304432345475,
+        "durbin_watson": 0.3175260396323374,
+        "icc": 0.3770792024959961,
+        "sd_ratio_log": 2.010367252617647,
+        "sd_ratio_natural": 17.419084460157098,
+        "anderson_darling_star": 12.513663240285252
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 17.4x -> 2.0x (9x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Skewed / heavy-tailed (skew +0.52, kurtosis 5.14) - Gaussian intervals unsafe",
+      "independence": "Serial correlation present (DW 0.32 vs 2.0; ICC 0.38) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.38300237579793606,
+        3.0122322450765497,
+        11.870603203315888,
+        22.855993351512915,
+        42.08815420229658,
+        65.5504646595785
+      ],
+      "sd_natural": [
+        0.30867098406900884,
+        1.0476078985242825,
+        2.5653164808556888,
+        5.935703060780856,
+        11.170705549563984,
+        14.627833122562826
+      ],
+      "sd_log": [
+        0.49640104963857784,
+        0.32680439096427083,
+        0.20147159554013158,
+        0.21848526591626252,
+        0.25886649965332537,
+        0.20150542554833153
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_ExtraTrees.png",
+      "scale": "figs/fig_scale_ExtraTrees.png"
+    },
+    "interpretation": "**ExtraTrees** is a grey-box arm (Minto base with an ML residual correction). It explains 93.9% of the variance (R\u00b2 0.939), with RMSE 7.95 and MAE 4.34 ng/mL. Residual dispersion falls from 17.4x across concentration terciles on the natural scale to 2.0x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are skewed (skew +0.52) but heavy-tailed (kurtosis 5.14 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.32 (against 2.0 for independence) and an intraclass correlation of 0.38 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "GradientBoosting": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.2937049007943595,
+      "sd": 7.47809364919404,
+      "skew": 1.1509656009578821,
+      "kurtosis": 10.261621820303061,
+      "jarque_bera": 4816.493213714756,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 123.26714826217449,
+      "anderson_darling_star": 123.3136289818875,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 357.1670929739003,
+      "breusch_pagan_p": 1.1653275064871623e-79,
+      "breusch_pagan_R2": 0.17930074948488972,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6169377646747269,
+      "dw_n_subjects": 65,
+      "icc": 0.25896847538800644,
+      "tercile_sd": [
+        0.7279617494148488,
+        4.402075120817124,
+        12.158804308028309
+      ],
+      "tercile_sd_ratio": 16.70253185390828
+    },
+    "log": {
+      "n": 1977,
+      "mean": -0.013716021135089539,
+      "sd": 0.28788318467542057,
+      "skew": 0.44811506902514026,
+      "kurtosis": 4.859396688027847,
+      "jarque_bera": 350.9656485004058,
+      "jarque_bera_p": 6.148621499915177e-77,
+      "anderson_darling": 10.89116118438983,
+      "anderson_darling_star": 10.895299154034884,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 278.1905825779835,
+      "breusch_pagan_p": 1.8616757025485353e-62,
+      "breusch_pagan_R2": 0.1407134964987271,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3459326083720068,
+      "dw_n_subjects": 65,
+      "icc": 0.36920013522145373,
+      "tercile_sd": [
+        0.3988841286907003,
+        0.2054822138614156,
+        0.21783712664157773
+      ],
+      "tercile_sd_ratio": 1.9412100015611167
+    },
+    "toast": {
+      "arm": "GradientBoosting",
+      "stats": {
+        "skew": 0.44811506902514026,
+        "kurtosis": 4.859396688027847,
+        "durbin_watson": 0.3459326083720068,
+        "icc": 0.36920013522145373,
+        "sd_ratio_log": 1.9412100015611167,
+        "sd_ratio_natural": 16.70253185390828,
+        "anderson_darling_star": 10.895299154034884
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 16.7x -> 1.9x (9x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.45, kurtosis 4.86) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.35 vs 2.0; ICC 0.37) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.37908564631676966,
+        3.0181530709122666,
+        11.826758522777757,
+        22.68919874952601,
+        42.127057636342485,
+        65.48606183549353
+      ],
+      "sd_natural": [
+        0.26444196765400924,
+        1.0147014334557194,
+        2.43745614174933,
+        5.790512208833335,
+        10.635165700890104,
+        13.588862038857565
+      ],
+      "sd_log": [
+        0.46730012568782026,
+        0.3134119167579211,
+        0.19557197808407792,
+        0.21497879980945944,
+        0.24287895451456365,
+        0.18997301995971302
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_GradientBoosting.png",
+      "scale": "figs/fig_scale_GradientBoosting.png"
+    },
+    "interpretation": "**GradientBoosting** is a grey-box arm (Minto base with an ML residual correction). It explains 94.6% of the variance (R\u00b2 0.946), with RMSE 7.48 and MAE 4.18 ng/mL. Residual dispersion falls from 16.7x across concentration terciles on the natural scale to 1.9x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.45) but heavy-tailed (kurtosis 4.86 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.35 (against 2.0 for independence) and an intraclass correlation of 0.37 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "XGBoost": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.3227926668727504,
+      "sd": 7.268905684061058,
+      "skew": 1.1743546038077814,
+      "kurtosis": 10.717214144076488,
+      "jarque_bera": 5400.961814260203,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 125.84956322150128,
+      "anderson_darling_star": 125.89701770030258,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 355.7853450087566,
+      "breusch_pagan_p": 2.3298490838616743e-79,
+      "breusch_pagan_R2": 0.17860710090801035,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6332887455187638,
+      "dw_n_subjects": 65,
+      "icc": 0.23391512330447628,
+      "tercile_sd": [
+        0.7714790725042862,
+        4.338944608434812,
+        11.793372200484981
+      ],
+      "tercile_sd_ratio": 15.286703970080096
+    },
+    "log": {
+      "n": 1976,
+      "mean": -0.007074300785789316,
+      "sd": 0.2874259743303739,
+      "skew": 0.3980827846906327,
+      "kurtosis": 4.606985033007215,
+      "jarque_bera": 264.8070953379387,
+      "jarque_bera_p": 3.1468052275073997e-58,
+      "anderson_darling": 10.808388433232949,
+      "anderson_darling_star": 10.812497035686079,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 310.96956291128504,
+      "breusch_pagan_p": 1.3428051100857988e-69,
+      "breusch_pagan_R2": 0.15737326058263412,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3280793314023894,
+      "dw_n_subjects": 65,
+      "icc": 0.36259332273693684,
+      "tercile_sd": [
+        0.40338400062450774,
+        0.20211837533749719,
+        0.210414348752529
+      ],
+      "tercile_sd_ratio": 1.9957809375369127
+    },
+    "toast": {
+      "arm": "XGBoost",
+      "stats": {
+        "skew": 0.3980827846906327,
+        "kurtosis": 4.606985033007215,
+        "durbin_watson": 0.3280793314023894,
+        "icc": 0.36259332273693684,
+        "sd_ratio_log": 1.9957809375369127,
+        "sd_ratio_natural": 15.286703970080096,
+        "anderson_darling_star": 10.812497035686079
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 15.3x -> 2.0x (8x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.40, kurtosis 4.61) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.33 vs 2.0; ICC 0.36) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.37141332059394944,
+        3.057910426212401,
+        11.876639847501911,
+        22.23174847742801,
+        41.81726302514669,
+        66.33389521003087
+      ],
+      "sd_natural": [
+        0.25844728780194787,
+        1.0858572005173013,
+        2.4211651145871644,
+        5.764133816046034,
+        10.416829384093521,
+        13.07198815691063
+      ],
+      "sd_log": [
+        0.4656968736859506,
+        0.3252126347689354,
+        0.19348083140311165,
+        0.21041990787422993,
+        0.2397461546690252,
+        0.17675928980069647
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_XGBoost.png",
+      "scale": "figs/fig_scale_XGBoost.png"
+    },
+    "interpretation": "**XGBoost** is a grey-box arm (Minto base with an ML residual correction). It explains 94.9% of the variance (R\u00b2 0.949), with RMSE 7.27 and MAE 4.04 ng/mL. Residual dispersion falls from 15.3x across concentration terciles on the natural scale to 2.0x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.40) but heavy-tailed (kurtosis 4.61 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.33 (against 2.0 for independence) and an intraclass correlation of 0.36 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "CatBoost": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.3392452175230887,
+      "sd": 7.761415778156759,
+      "skew": 1.115794064661949,
+      "kurtosis": 10.073625748280753,
+      "jarque_bera": 4566.341844871421,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 120.42673224570581,
+      "anderson_darling_star": 120.4721419210847,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 336.0698979259233,
+      "breusch_pagan_p": 4.579218362763543e-75,
+      "breusch_pagan_R2": 0.16870978811542336,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6668119889623936,
+      "dw_n_subjects": 65,
+      "icc": 0.26634179648730383,
+      "tercile_sd": [
+        0.7160737123728668,
+        4.540375204854363,
+        12.626263785678201
+      ],
+      "tercile_sd_ratio": 17.63263134438816
+    },
+    "log": {
+      "n": 1976,
+      "mean": -0.00927472047771411,
+      "sd": 0.2937507200519109,
+      "skew": 0.48811774651492,
+      "kurtosis": 4.998036510380391,
+      "jarque_bera": 407.1536172540246,
+      "jarque_bera_p": 3.8700392513492714e-89,
+      "anderson_darling": 10.865275326529854,
+      "anderson_darling_star": 10.869405553449091,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 238.634899968378,
+      "breusch_pagan_p": 7.804799133240574e-54,
+      "breusch_pagan_R2": 0.12076664978156781,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3546993569967642,
+      "dw_n_subjects": 65,
+      "icc": 0.39600646721999894,
+      "tercile_sd": [
+        0.4011767426098162,
+        0.21187094511532623,
+        0.23069864855010005
+      ],
+      "tercile_sd_ratio": 1.893495790050148
+    },
+    "toast": {
+      "arm": "CatBoost",
+      "stats": {
+        "skew": 0.48811774651492,
+        "kurtosis": 4.998036510380391,
+        "durbin_watson": 0.3546993569967642,
+        "icc": 0.39600646721999894,
+        "sd_ratio_log": 1.893495790050148,
+        "sd_ratio_natural": 17.63263134438816,
+        "anderson_darling_star": 10.869405553449091
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 17.6x -> 1.9x (9x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew +0.49, kurtosis 5.00) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.35 vs 2.0; ICC 0.40) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.3824215859286071,
+        2.9449853819171348,
+        11.791173388153291,
+        23.035469243494493,
+        42.08799564709701,
+        65.25832050727158
+      ],
+      "sd_natural": [
+        0.29278006903505654,
+        1.0072725818738217,
+        2.5038979816799913,
+        6.027892634204346,
+        11.059292239245796,
+        14.07130328518973
+      ],
+      "sd_log": [
+        0.47162114343687844,
+        0.31127214176131857,
+        0.1978738482355413,
+        0.22470610160706045,
+        0.2550664338401185,
+        0.203603670215175
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_CatBoost.png",
+      "scale": "figs/fig_scale_CatBoost.png"
+    },
+    "interpretation": "**CatBoost** is a grey-box arm (Minto base with an ML residual correction). It explains 94.2% of the variance (R\u00b2 0.942), with RMSE 7.77 and MAE 4.33 ng/mL. Residual dispersion falls from 17.6x across concentration terciles on the natural scale to 1.9x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew +0.49) but heavy-tailed (kurtosis 5.00 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.35 (against 2.0 for independence) and an intraclass correlation of 0.40 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "StackingEnsemble": {
+    "natural": {
+      "n": 1992,
+      "mean": 0.43864278193355505,
+      "sd": 7.767697447540931,
+      "skew": 1.2170115066427551,
+      "kurtosis": 10.494042076787707,
+      "jarque_bera": 5153.066178263051,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 124.63490402912294,
+      "anderson_darling_star": 124.68190049267635,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 436.3074944963809,
+      "breusch_pagan_p": 6.887876353520481e-97,
+      "breusch_pagan_R2": 0.21902986671505065,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.6498005914239279,
+      "dw_n_subjects": 65,
+      "icc": 0.26897907656558173,
+      "tercile_sd": [
+        0.7428258126244429,
+        4.446355657636125,
+        12.663561609250594
+      ],
+      "tercile_sd_ratio": 17.047821163496675
+    },
+    "log": {
+      "n": 1978,
+      "mean": -0.006564786634297904,
+      "sd": 0.2920266574942082,
+      "skew": 0.6041379329495001,
+      "kurtosis": 5.214269885840931,
+      "jarque_bera": 524.4107964004978,
+      "jarque_bera_p": 1.33549552274966e-114,
+      "anderson_darling": 9.9455662268997,
+      "anderson_darling_star": 9.94934301551318,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 243.03435853153863,
+      "breusch_pagan_p": 8.572290182631871e-55,
+      "breusch_pagan_R2": 0.12286873535467069,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.3393870884032584,
+      "dw_n_subjects": 65,
+      "icc": 0.3674171173333419,
+      "tercile_sd": [
+        0.403129236535574,
+        0.20814503707218393,
+        0.22385100746649833
+      ],
+      "tercile_sd_ratio": 1.9367708315609287
+    },
+    "toast": {
+      "arm": "StackingEnsemble",
+      "stats": {
+        "skew": 0.6041379329495001,
+        "kurtosis": 5.214269885840931,
+        "durbin_watson": 0.3393870884032584,
+        "icc": 0.3674171173333419,
+        "sd_ratio_log": 1.9367708315609287,
+        "sd_ratio_natural": 17.047821163496675,
+        "anderson_darling_star": 9.94934301551318
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 17.0x -> 1.9x (9x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Skewed / heavy-tailed (skew +0.60, kurtosis 5.21) - Gaussian intervals unsafe",
+      "independence": "Serial correlation present (DW 0.34 vs 2.0; ICC 0.37) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.368193860010288,
+        2.8942793451687563,
+        11.652197483390694,
+        22.671472358241544,
+        42.06349964956644,
+        65.25306435531044
+      ],
+      "sd_natural": [
+        0.29419618245976054,
+        1.062375515385933,
+        2.532437816784079,
+        5.8765931538935625,
+        10.801284126386404,
+        14.333635332963656
+      ],
+      "sd_log": [
+        0.4728972594701472,
+        0.3157974026344484,
+        0.1996080114569408,
+        0.21679870820857514,
+        0.25010183109586565,
+        0.19494777303550065
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_StackingEnsemble.png",
+      "scale": "figs/fig_scale_StackingEnsemble.png"
+    },
+    "interpretation": "**StackingEnsemble** is a grey-box arm (Minto base with an ML residual correction). It explains 94.2% of the variance (R\u00b2 0.942), with RMSE 7.78 and MAE 4.25 ng/mL. Residual dispersion falls from 17.0x across concentration terciles on the natural scale to 1.9x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are skewed (skew +0.60) but heavy-tailed (kurtosis 5.21 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.34 (against 2.0 for independence) and an intraclass correlation of 0.37 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level."
+  },
+  "PureML_noMinto": {
+    "natural": {
+      "n": 1992,
+      "mean": 2.2615924688028004,
+      "sd": 14.47424416642605,
+      "skew": 3.742101308724189,
+      "kurtosis": 28.647723547967633,
+      "jarque_bera": 59246.97799699555,
+      "jarque_bera_p": 0.0,
+      "anderson_darling": 179.35038620502792,
+      "anderson_darling_star": 179.41801440239553,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 310.97181318021404,
+      "breusch_pagan_p": 1.3412903011467982e-69,
+      "breusch_pagan_R2": 0.15611034798203516,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.7123480364645597,
+      "dw_n_subjects": 65,
+      "icc": 0.3849608949242336,
+      "tercile_sd": [
+        0.9537575118237778,
+        7.08768349649157,
+        23.397774633841568
+      ],
+      "tercile_sd_ratio": 24.532204825417605
+    },
+    "log": {
+      "n": 1984,
+      "mean": -0.01821342498413494,
+      "sd": 0.3811006805628468,
+      "skew": -0.007108530981984188,
+      "kurtosis": 3.64508843591091,
+      "jarque_bera": 34.41754043974138,
+      "jarque_bera_p": 3.359897689915724e-08,
+      "anderson_darling": 2.363373416813374,
+      "anderson_darling_star": 2.364268180069221,
+      "ad_normal_at_5pct": false,
+      "breusch_pagan_LM": 59.66479821747182,
+      "breusch_pagan_p": 1.124703778346193e-14,
+      "breusch_pagan_R2": 0.030072982972516038,
+      "homoscedastic_at_5pct": false,
+      "durbin_watson": 0.37447466959335485,
+      "dw_n_subjects": 65,
+      "icc": 0.4929505903210465,
+      "tercile_sd": [
+        0.4402095250073343,
+        0.3516163141024508,
+        0.3370213433149037
+      ],
+      "tercile_sd_ratio": 1.3061769936511538
+    },
+    "toast": {
+      "arm": "PureML_noMinto",
+      "stats": {
+        "skew": -0.007108530981984188,
+        "kurtosis": 3.64508843591091,
+        "durbin_watson": 0.37447466959335485,
+        "icc": 0.4929505903210465,
+        "sd_ratio_log": 1.3061769936511538,
+        "sd_ratio_natural": 24.532204825417605,
+        "anderson_darling_star": 2.364268180069221
+      },
+      "heteroscedasticity": "Variance stabilised: SD ratio 24.5x -> 1.3x (19x better in log space)",
+      "heteroscedasticity_ok": true,
+      "normality": "Near-symmetric, heavy-tailed (skew -0.01, kurtosis 3.65) - conformal intervals appropriate",
+      "independence": "Serial correlation present (DW 0.37 vs 2.0; ICC 0.49) - subject-level CV + cluster bootstrap required"
+    },
+    "scale_comparison": {
+      "centres": [
+        0.4026239656742146,
+        2.96399195176824,
+        12.306608733545744,
+        23.865218387213805,
+        41.33792352772627,
+        57.41643226533893
+      ],
+      "sd_natural": [
+        0.3091546861846878,
+        1.342015690575606,
+        3.998636221032174,
+        9.242438288807174,
+        15.157823961289507,
+        28.824164245668488
+      ],
+      "sd_log": [
+        0.49569105848212014,
+        0.3770064602432929,
+        0.3330790653326836,
+        0.3665371125537641,
+        0.35564971596067285,
+        0.31181878127693685
+      ]
+    },
+    "figures": {
+      "diagnostics": "figs/fig_diagnostics_PureML_noMinto.png",
+      "scale": "figs/fig_scale_PureML_noMinto.png"
+    },
+    "interpretation": "**PureML_noMinto** is the ablation arm with no mechanistic base. It explains 79.4% of the variance (R\u00b2 0.794), with RMSE 14.65 and MAE 6.34 ng/mL. Residual dispersion falls from 24.5x across concentration terciles on the natural scale to 1.3x in log space, which is the empirical case for the multiplicative grey-box form. Log residuals are near-symmetric (skew -0.01) but heavy-tailed (kurtosis 3.65 vs 3.0 for a normal), so Gaussian prediction intervals would be mis-calibrated - hence the distribution-free conformal intervals. Durbin-Watson of 0.37 (against 2.0 for independence) and an intraclass correlation of 0.49 confirm strong within-patient dependence, which is why splitting and bootstrapping are both done at subject level. Its ICC is the highest of any arm: without the mechanistic prior the errors cluster far more strongly by patient, i.e. it fails in a patient-specific way that the Minto base otherwise absorbs."
+  },
+  "_scale_comparison": {
+    "centres": [
+      0.37141332059394944,
+      3.057910426212401,
+      11.876639847501911,
+      22.23174847742801,
+      41.81726302514669,
+      66.33389521003087
+    ],
+    "sd_natural": [
+      0.25844728780194787,
+      1.0858572005173013,
+      2.4211651145871644,
+      5.764133816046034,
+      10.416829384093521,
+      13.07198815691063
+    ],
+    "sd_log": [
+      0.4656968736859506,
+      0.3252126347689354,
+      0.19348083140311165,
+      0.21041990787422993,
+      0.2397461546690252,
+      0.17675928980069647
+    ]
+  },
+  "_radar": {
+    "axes": [
+      "R\u00b2",
+      "RMSE",
+      "MDPE",
+      "PI coverage",
+      "Homoscedasticity",
+      "Normality (AD*)"
+    ],
+    "axis_help": {
+      "R\u00b2": "variance explained; higher is better",
+      "RMSE": "root mean squared error; lower is better",
+      "MDPE": "median performance error, Varvel bias; |MDPE| nearer 0 is better",
+      "PI coverage": "95% conformal interval coverage; nearer 95% is better",
+      "Homoscedasticity": "residual SD ratio across concentration terciles; nearer 1 is better",
+      "Normality (AD*)": "Anderson\u2013Darling statistic on log residuals; lower is better"
+    },
+    "scores": {
+      "Minto": {
+        "R\u00b2": 0.6104120770636305,
+        "RMSE": 0.5892069428939023,
+        "MDPE": 0.4934926870943191,
+        "PI coverage": 0.0,
+        "Homoscedasticity": 0.0,
+        "Normality (AD*)": 0.051795392462220785
+      },
+      "BayesianCompartment": {
+        "R\u00b2": 0.0,
+        "RMSE": 0.0,
+        "MDPE": 0.23502089080309999,
+        "PI coverage": 0.9797843665768198,
+        "Homoscedasticity": 0.4663188297424211,
+        "Normality (AD*)": 0.8145863674556253
+      },
+      "SupportVectorRobust": {
+        "R\u00b2": 0.44851225203913947,
+        "RMSE": 0.42707583423406886,
+        "MDPE": 1.0,
+        "PI coverage": 0.9615902964959566,
+        "Homoscedasticity": 1.0,
+        "Normality (AD*)": 1.0
+      },
+      "RandomForest": {
+        "R\u00b2": 0.6400449670561532,
+        "RMSE": 0.6193914595861509,
+        "MDPE": 0.3753188821794415,
+        "PI coverage": 0.9831536388140163,
+        "Homoscedasticity": 0.315545189567339,
+        "Normality (AD*)": 0.40091436546185694
+      },
+      "ExtraTrees": {
+        "R\u00b2": 0.5366288707710082,
+        "RMSE": 0.5147456017679665,
+        "MDPE": 0.48949029325627086,
+        "PI coverage": 0.9663072776280326,
+        "Homoscedasticity": 0.011787064970083068,
+        "Normality (AD*)": 0.0
+      },
+      "GradientBoosting": {
+        "R\u00b2": 0.8623853316174406,
+        "RMSE": 0.851294695347225,
+        "MDPE": 0.19441362878095583,
+        "PI coverage": 0.9797843665768198,
+        "Homoscedasticity": 0.2811797006407215,
+        "Normality (AD*)": 0.20025961220456112
+      },
+      "XGBoost": {
+        "R\u00b2": 1.0,
+        "RMSE": 1.0,
+        "MDPE": 0.0,
+        "PI coverage": 0.9528301886792454,
+        "Homoscedasticity": 0.06860606520925351,
+        "Normality (AD*)": 0.21050571210947625
+      },
+      "CatBoost": {
+        "R\u00b2": 0.6673558783711462,
+        "RMSE": 0.6473558867265392,
+        "MDPE": 0.35493720869903916,
+        "PI coverage": 0.9797843665768198,
+        "Homoscedasticity": 0.4670439014514111,
+        "Normality (AD*)": 0.20346373818334806
+      },
+      "StackingEnsemble": {
+        "R\u00b2": 0.6595077398896373,
+        "RMSE": 0.639305570991346,
+        "MDPE": 0.1557011953237859,
+        "PI coverage": 1.0,
+        "Homoscedasticity": 0.2984718816957948,
+        "Normality (AD*)": 0.3173141187104437
+      },
+      "PureML_noMinto": {
+        "R\u00b2": 0.0,
+        "RMSE": 0.0,
+        "MDPE": 0.32733966518732194,
+        "PI coverage": 0.0,
+        "Homoscedasticity": 1.15,
+        "Normality (AD*)": 1.15
+      }
+    },
+    "reference_arms": [
+      "Minto",
+      "BayesianCompartment",
+      "SupportVectorRobust",
+      "RandomForest",
+      "ExtraTrees",
+      "GradientBoosting",
+      "XGBoost",
+      "CatBoost",
+      "StackingEnsemble"
+    ],
+    "raw": {
+      "Minto": {
+        "R\u00b2": 0.9409116999421144,
+        "RMSE": -7.848112130640893,
+        "MDPE": -3.2702579073547207,
+        "PI coverage": -15.0,
+        "Homoscedasticity": -2.013393174277778,
+        "Normality (AD*)": -12.09508756208771
+      },
+      "BayesianCompartment": {
+        "R\u00b2": 0.9278674663674539,
+        "RMSE": -8.671216806742251,
+        "MDPE": -4.27479077540977,
+        "PI coverage": -0.3427419354838719,
+        "Homoscedasticity": -1.8936819271584908,
+        "Normality (AD*)": -5.930721688931823
+      },
+      "SupportVectorRobust": {
+        "R\u00b2": 0.9374519729598516,
+        "RMSE": -8.074604495146918,
+        "MDPE": -1.3017520547829635,
+        "PI coverage": -0.6149193548387188,
+        "Homoscedasticity": -1.756677726639921,
+        "Normality (AD*)": -4.43233286900079
+      },
+      "RandomForest": {
+        "R\u00b2": 0.9415449415719559,
+        "RMSE": -7.805945253391921,
+        "MDPE": -3.729532276486935,
+        "PI coverage": -0.2923387096774235,
+        "Homoscedasticity": -1.9323878496880262,
+        "Normality (AD*)": -9.27374180239411
+      },
+      "ExtraTrees": {
+        "R\u00b2": 0.9393349857633941,
+        "RMSE": -7.952132422337579,
+        "MDPE": -3.285812935868124,
+        "PI coverage": -0.5443548387096797,
+        "Homoscedasticity": -2.010367252617647,
+        "Normality (AD*)": -12.513663240285252
+      },
+      "GradientBoosting": {
+        "R\u00b2": 0.9462962559010633,
+        "RMSE": -7.481983290519485,
+        "MDPE": -4.432608107777468,
+        "PI coverage": -0.3427419354838719,
+        "Homoscedasticity": -1.9412100015611167,
+        "Normality (AD*)": -10.895299154034884
+      },
+      "XGBoost": {
+        "R\u00b2": 0.9492370199277462,
+        "RMSE": -7.274246377204096,
+        "MDPE": -5.188183311380283,
+        "PI coverage": -0.7459677419354875,
+        "Homoscedasticity": -1.9957809375369127,
+        "Normality (AD*)": -10.812497035686079
+      },
+      "CatBoost": {
+        "R\u00b2": 0.942128563554082,
+        "RMSE": -7.7668797755978245,
+        "MDPE": -3.808744249362931,
+        "PI coverage": -0.3427419354838719,
+        "Homoscedasticity": -1.893495790050148,
+        "Normality (AD*)": -10.869405553449091
+      },
+      "StackingEnsemble": {
+        "R\u00b2": 0.9419608523384528,
+        "RMSE": -7.778125828628335,
+        "MDPE": -4.583061319184357,
+        "PI coverage": -0.04032258064516725,
+        "Homoscedasticity": -1.9367708315609287,
+        "Normality (AD*)": -9.94934301551318
+      },
+      "PureML_noMinto": {
+        "R\u00b2": 0.7942094315461801,
+        "RMSE": -14.646275025477298,
+        "MDPE": -3.9160002050721734,
+        "PI coverage": -15.0,
+        "Homoscedasticity": -1.3061769936511538,
+        "Normality (AD*)": -2.364268180069221
+      }
+    },
+    "caveat": "Axes min\u2013max scaled across candidate models. Area is not a quality score.",
+    "caveat_detail": "Each axis is independently min\u2013max normalised across the nine candidate models, so a polygon shows relative position on each axis, not absolute merit. The axes are not commensurable, so polygon area carries no meaning and models must not be ranked by it. Two axes in particular reward uniform error rather than good error: Homoscedasticity and Normality (AD*). The pure-ML ablation scores at the top of both because its residuals are uniformly poor across the concentration range, not because it is a better model. Read R\u00b2, RMSE, MDPE and PI coverage as performance; read Homoscedasticity and Normality as assumption checks."
+  }
+}
